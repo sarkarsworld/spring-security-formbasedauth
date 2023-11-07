@@ -1,5 +1,7 @@
 package com.simplesolutions.config;
 
+import com.simplesolutions.services.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -33,15 +38,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .inMemoryAuthentication().withUser("Admin").password(this.passwordEncoder().encode("Admin")).roles("ADMIN");
-        auth
-                .inMemoryAuthentication().withUser("Normal").password(this.passwordEncoder().encode("Normal")).roles("NORMAL");
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
+
     }
 
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 

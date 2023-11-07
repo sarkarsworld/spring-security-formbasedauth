@@ -3,6 +3,7 @@ package com.simplesolutions.services;
 import com.simplesolutions.models.User;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +12,9 @@ public class UserService {
 
     List<User> list = new ArrayList<>();
 
-    public UserService() {
-        list.add(new User("abc", "abc", "abc@abc.com"));
-        list.add(new User("xyz", "xyz", "xyz@xyz.com"));
+    public UserService(List<User> list) {
+        this.list.add(new User("InMemUser1", "InMemUser1", "InMemUser1@gmail.com", "ROLE_DUMMY"));
+        this.list.add(new User("InMemUser2", "InMemUser2", "InMemUser2@gmail.com", "ROLE_DUMMY"));
     }
 
     public List<User> getAllUsers(){
