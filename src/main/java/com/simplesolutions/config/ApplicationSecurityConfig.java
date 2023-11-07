@@ -16,6 +16,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
         http
                 .csrf().disable()  // This is to disable CSRF security provided by Spring so that we can access the POST URI calls from non-browser clients like postman.
                 .authorizeRequests()
+                .antMatchers("/signin").permitAll()  // This URI is accessible to users with any role.
                 .antMatchers("/public/**").hasRole("NORMAL")    // URI's starting with /public can be accessed by NORMAL users only.
                 .antMatchers("/users/**").hasRole("ADMIN")   // URI's starting with /users can be accessed by ADMIN users only.
 
@@ -24,7 +25,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin();
+                .formLogin()
+                .loginPage("/signin")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/users/");
     }
 
     @Override
